@@ -1,0 +1,4 @@
+select post,count from byr where post = '自然语言' or post='音频' or post='视频' or post='算法' or post='数据挖掘' or post='ANDROID' or post='DBA'
+or post='JAVA' or post='数据库' or post='游戏' or post='IOS' or post='数据' or post='搜索' or post='C#' or post='SQL' or post='前端'
+or post='JS' or post='PHP' or post='机器' or post='图像' or post='检索' or post='算法' or post='WEB' or post='PYTHON' or post='UI' or post='C++'
+or post='JAVASCRIPT' or post='LINUX' or post='WINDOWS' or post='安卓' or post='UNITY3D' or post='RUBY' or post='C' or post='NLP';
