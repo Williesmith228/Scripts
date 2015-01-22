@@ -8,6 +8,8 @@
 (setq default-buffer-file-coding-system 'utf-8-unix)
 ;;关闭欢迎界面
 (setq inhibit-startup-message t)
+;;跳转到指定行
+(define-key global-map "\M-x" 'goto-line)
 ;;主题
 (require 'color-theme)
 (color-theme-initialize)
@@ -200,4 +202,42 @@
 
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
+
+;;Gtags设置
+(setq load-path (cons "~/.emacs.d/gtags/" load-path));;
+
+(autoload 'gtags-mode "gtags" "" t) 
+  
+(setq c-mode-hook 
+           '(lambda () 
+               (gtags-mode 1) 
+       )) 
+  
+(setq gtags-mode-hook 
+       '(lambda () 
+         (setq gtags-path-style 'absolute))) 
+
+(add-hook 'c-mode-hook 
+                 '(lambda () 
+                             (gtags-mode 1)))
+
+(add-hook 'c++-mode-hook 
+                 '(lambda () 
+                             (gtags-mode 1))) 
+
+(add-hook 'gtags-mode-hook 
+       (lambda() 
+         (define-key gtags-mode-map (kbd "C-.") 'gtags-find-tag) 
+         (define-key gtags-mode-map (kbd "C-, s") 'gtags-find-symbol) 
+         (define-key gtags-mode-map (kbd "C-, u") 'gtags-pop-stack) 
+         )) 
+  
+(add-hook 'gtags-select-mode-hook 
+       (lambda () 
+          (setq hl-line-face 'underline) 
+          (hl-line-mode 1))) 
+(add-hook 'gtags-select-mode-hook 
+       (lambda() 
+         (define-key gtags-select-mode-map (kbd "RET") 'gtags-select-tag) 
+         )) 
 
