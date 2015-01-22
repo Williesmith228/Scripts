@@ -1,33 +1,25 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (dichromacy)))
- '(inhibit-startup-screen t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-;;(set-language-environment 'UTF-8) 
-;;(set-locale-environment "UTF-8") 
+;;设置loadpath
+(add-to-list 'load-path "~/.emacs.d/plugins/")
+(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
+(add-to-list 'load-path "~/.emacs.d/plugins/theme")
+(add-to-list 'load-path' "~/.emacs.d/cl-lib/")
+(require 'cl-lib)
 ;;设置为默认utf-8
 (setq default-buffer-file-coding-system 'utf-8-unix)
-;;设置loadpath
-(add-to-list 'load-path "~/.emacs.d")
-(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
+;;关闭欢迎界面
+(setq inhibit-startup-message t)
+;;主题
+(require 'color-theme)
+(color-theme-initialize)
 ;;模板
-(add-to-list 'load-path
-              "~/.emacs.d/plugins/yasnippet")
 (require 'yasnippet)
+
 (setq yas-snippet-dirs
       '("~/.emacs.d/plugins/yasnippet/snippets"
-))
+        ))
 (yas-global-mode 1)
 
-;;speedbar
+;;文件列表
 (require 'sr-speedbar)
 
 ;;tabbar
@@ -39,13 +31,13 @@
 (require 'auto-complete-config)
 (ac-config-default)
 (auto-complete-mode t)
-;;模板
 
 (tool-bar-mode 0)
 
 ;;自动补全括号
 (require 'autopair)
 (autopair-global-mode)
+
 ;;高亮括号
 (require 'highlight-parentheses)
 (add-hook 'emacs-lisp-mode-hook
@@ -59,30 +51,31 @@
           '(lambda ()
              (setq autopair-handle-action-fns
                    (append
-					(if autopair-handle-action-fns
-						autopair-handle-action-fns
-					  '(autopair-default-handle-action))
-					'((lambda (action pair pos-before)
-						(hl-paren-color-update)))))))
+		    (if autopair-handle-action-fns
+			autopair-handle-action-fns
+		      '(autopair-default-handle-action))
+		    '((lambda (action pair pos-before)
+			(hl-paren-color-update)))))))
 (define-globalized-minor-mode global-highlight-parentheses-mode
   highlight-parentheses-mode
   (lambda ()
     (highlight-parentheses-mode t)))
 (global-highlight-parentheses-mode t)
+
 ;;设置bookmark
 (require 'bm)
+
 ;;非mac的中文字体
 (set-fontset-font "fontset-default" 'gb18030' ("Microsoft YaHei" . "unicode-bmp"))
 (when (eq system-type 'darwin)
   ;;设置一个MacOS字体
-  (set-default-font " -apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  (set-default-font " -apple-Monaco-medium-normal-normal-*-13-*-*-*-m-0-iso10646-1")
   ;;干掉小方框！！因为上面那个万恶的字体没有草泥马的斜体！！！
   (set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
   )
 ;;设置一个屌逼的c风格的缩进
 (setq c-basic-offset 4)
-;;设置一个开始的路径
-(setq default-directory "~/source/") 
+
 ;;关掉默认的tab设置为4个空格
 (setq default-tab-width 4)
 (setq-default indent-tabs-mode nil)
@@ -117,11 +110,11 @@
 (put 'upcase-region 'disabled nil)
 ;;set meta real meta
 (when (eq system-type 'darwin)
-  (setq mac-option-modifier 'meta)
-  (setq mac-command-modifier 'control)
-  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-  )
-;;()的匹配
+ (setq mac-option-modifier 'meta)
+ (setq mac-command-modifier 'control)
+ (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+ )
+;; ()的匹配
 (show-paren-mode t)  
 (setq show-paren-style 'parentheses)
 ;;光标移动到鼠标的时候把鼠标干掉！
@@ -140,12 +133,14 @@
           ("\\.pc$" . c-mode)
           )
         auto-mode-alist))
+
 ;;设置使用org模式打开.txt Orz....
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;;设置less文件用css方式打开
 (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode
-))
-
+                                ))
+;;设置gomode 自动打开
+(require 'go-mode-autoloads)
 
 ;;设置bookmark的快捷键
 (global-set-key [(control \`)] 'bm-toggle)
@@ -158,30 +153,21 @@
 (global-set-key(kbd"<f5>")(lambda()
                             (interactive)
                             (sr-speedbar-toggle)
-))
+                            ))
 
 ;;设置开启的时候的大小（行数和列数）
 (setq default-frame-alist 
       '((height . 35) (width . 100) )
       )
 ;;自动分屏
-;; (split-window-right 70)
+;;主屏幕设置为eshell
+(eshell)
+(rename-buffer "workplace")
 (sr-speedbar-toggle)
-(split-window-below 20)
-;;(find-file '"~/Documents/acm/campus/p.cpp")
-(other-window 1)
-;;(split-window-below 25)
-;;(find-file '"~/Documents/acm/campus/in.txt")
-;;(other-window 1)
-;;(setq default-directory "~/Documents/acm/campus/")
-(shell)
-(other-window 1)
 
 ;;tabbar hot key
 (global-set-key [(meta j)] 'tabbar-backward)  
 (global-set-key [(meta k)] 'tabbar-forward) 
-
-
 
 (defun nb ()
   (interactive) 
@@ -195,3 +181,23 @@
 
 (global-set-key [(meta \[)] 'pb)  
 (global-set-key [(meta \])] 'nb) 
+
+;;shell config
+;; (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t) 
+;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
+
+;;半透明
+(global-set-key(kbd"<f6>") 'loop-alpha) ;;全局绑定F6键为Emacs半透明功能键
+(setq alpha-list '((50 30) (100 100))) ;;当前窗口和非当前窗口时透明度分别为85、50
+(defun loop-alpha ()
+  (interactive)
+  (let ((h (car alpha-list)))
+    ((lambda (a ab)
+       (set-frame-parameter (selected-frame) 'alpha (list a ab))
+       (add-to-list 'default-frame-alist (cons 'alpha (list a ab))))
+     (car h) (car (cdr h)))
+    (setq alpha-list (cdr (append alpha-list (list h))))))
+
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+
